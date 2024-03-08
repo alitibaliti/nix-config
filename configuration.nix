@@ -11,7 +11,6 @@
 			./hardware-configuration.nix
 		];
 
-
 	nix = {
 		package = pkgs.nixFlakes;
 		extraOptions = lib.optionalString (config.nix.package == pkgs.nixFlakes)
