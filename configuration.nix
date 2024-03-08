@@ -7,8 +7,10 @@
 {
 	imports =
 		[ # Include the results of the hardware scan.
-		<home-manager/nixos>
+		#<home-manager/nixos>
 			./hardware-configuration.nix
+			# ./home-manager.nix
+			./home.nix
 		];
 
 	nix = {
@@ -16,6 +18,8 @@
 		extraOptions = lib.optionalString (config.nix.package == pkgs.nixFlakes)
 			"experimental-features = nix-command flakes";
 	};
+
+
 
 
 	nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -55,6 +59,11 @@
 
 # Enable networking
 	networking.networkmanager.enable = true;
+
+# Avahi
+	services.avahi = {
+		enable = true;
+	};
 
 # Set your time zone.
 	time.timeZone = "America/Los_Angeles";
@@ -115,17 +124,6 @@
 
 	programs.fish.enable=true;
 
-# let
-#   home-manager = builtins.fetchtarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
-# in
-# {
-#   imports = [
-#     (import "${home-manager}/nixos")
-#   ];
-#   };
-
-
-
 users.defaultUserShell = pkgs.fish;
 # Define a user account. Don't forget to set a password with ‘passwd’.
 	users.users.dt = {
@@ -146,22 +144,11 @@ users.defaultUserShell = pkgs.fish;
 				kitty
 				wezterm
 				vscode
+				watchexec
 #	logseq
 #	obsidian
 #  thunderbird
 		];
-	};
-
-	home-manager.users.dt = { pkgs, ... }: {
-		home.packages = [ pkgs.atool pkgs.httpie 
-# pkgs.obsidian
-# pkgs.logseq 
-		];
-		programs.fish.enable = true;
-
-# The state version is required and should stay at the version you
-# originally installed.
-		home.stateVersion = "23.11";
 	};
 
 # Enable automatic login for the user.
@@ -178,8 +165,8 @@ users.defaultUserShell = pkgs.fish;
 # List packages installed in system profile. To search, run:
 # $ nix search wget
 	environment.systemPackages = with pkgs; [
-#  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-		wget
+		nssmdns
+			wget
 			docker
 			neovim
 			ranger
@@ -200,11 +187,12 @@ users.defaultUserShell = pkgs.fish;
 # List services that you want to enable:
 
 # Enable the OpenSSH daemon.
-# services.openssh.enable = true;
 	services.openssh = {
 		enable = true;
 		passwordAuthentication = true;
 	};
+
+	# services.avahi.nssmdns.enable=true;
 
 # Open ports in the firewall.
 # networking.firewall.allowedTCPPorts = [ ... ];
