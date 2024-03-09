@@ -11,6 +11,8 @@
     pkgs.htop
     pkgs.fortune
     pkgs.rnix-lsp
+    pkgs.emacs
+    pkgs.meld
   ];
 
   # This value determines the Home Manager release that your
