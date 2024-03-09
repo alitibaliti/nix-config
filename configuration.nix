@@ -2,210 +2,204 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib,... }:
+{ config, pkgs, lib, ... }:
 
 {
-	imports =
-		[ # Include the results of the hardware scan.
-		#<home-manager/nixos>
-			./hardware-configuration.nix
-			# ./home-manager.nix
-			./home.nix
-		];
+  imports = [ # Include the results of the hardware scan.
+    #<home-manager/nixos>
+    ./hardware-configuration.nix
+    # ./home-manager.nix
+    ./home.nix
+  ];
 
-	nix = {
-		package = pkgs.nixFlakes;
-		extraOptions = lib.optionalString (config.nix.package == pkgs.nixFlakes)
-			"experimental-features = nix-command flakes";
-	};
+  nix = {
+    package = pkgs.nixFlakes;
+    extraOptions = lib.optionalString (config.nix.package == pkgs.nixFlakes)
+      "experimental-features = nix-command flakes";
+  };
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # nix.optimise.automatic = true;
+  nix.settings.auto-optimise-store = true;
 
+  # Bootloader.
+  # boot.loader.systemd-boot.enable = true;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "nodev";
+  # boot.loader.grub.device = "/dev/nvme0";
+  boot.loader.grub.useOSProber = true;
 
-	nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  boot.loader.efi.canTouchEfiVariables = true;
 
-	# nix.optimise.automatic = true;
-	nix.settings.auto-optimise-store = true;
+  networking.hostName = "z3"; # Define your hostname.
 
-# Bootloader.
-# boot.loader.systemd-boot.enable = true;
-	boot.loader.grub.enable = true;
-	boot.loader.grub.device = "nodev";
-# boot.loader.grub.device = "/dev/nvme0";
-	boot.loader.grub.useOSProber = true;
+  # Enable networking.
+  # networking.useDHCP = true;
 
-	boot.loader.efi.canTouchEfiVariables = true;
+  # Settings needed for ZFS
+  networking.hostId = "23916528";
 
-	networking.hostName = "z3"; # Define your hostname.
+  # Enable weekly garbage-collection and daily store optimization.
+  nix.gc.automatic = true;
+  nix.gc.dates = "weekly";
+  nix.gc.options = "--delete-older-than 7d";
+  nix.optimise.automatic = true;
+  nix.optimise.dates = [ "daily" ];
 
-# Enable networking.
-# networking.useDHCP = true;
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-# Settings needed for ZFS
-		networking.hostId = "23916528";
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-# Enable weekly garbage-collection and daily store optimization.
-	nix.gc.automatic = true;
-	nix.gc.dates = "weekly";
-	nix.gc.options = "--delete-older-than 7d";
-	nix.optimise.automatic = true;
-	nix.optimise.dates = ["daily"];
+  # Enable networking
+  networking.networkmanager.enable = true;
 
-# networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # Avahi
+  services.avahi = { enable = true; };
 
-# Configure network proxy if necessary
-# networking.proxy.default = "http://user:password@proxy:port/";
-# networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  # Set your time zone.
+  time.timeZone = "America/Los_Angeles";
 
-# Enable networking
-	networking.networkmanager.enable = true;
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
 
-# Avahi
-	services.avahi = {
-		enable = true;
-	};
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
+  };
 
-# Set your time zone.
-	time.timeZone = "America/Los_Angeles";
+  # Enable the X11 windowing system.
+  services.xserver.enable = true;
 
-# Select internationalisation properties.
-	i18n.defaultLocale = "en_US.UTF-8";
+  # Enable the GNOME Desktop Environment.
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
-	i18n.extraLocaleSettings = {
-		LC_ADDRESS = "en_US.UTF-8";
-		LC_IDENTIFICATION = "en_US.UTF-8";
-		LC_MEASUREMENT = "en_US.UTF-8";
-		LC_MONETARY = "en_US.UTF-8";
-		LC_NAME = "en_US.UTF-8";
-		LC_NUMERIC = "en_US.UTF-8";
-		LC_PAPER = "en_US.UTF-8";
-		LC_TELEPHONE = "en_US.UTF-8";
-		LC_TIME = "en_US.UTF-8";
-	};
+  # Configure keymap in X11
+  services.xserver = {
+    layout = "us";
+    xkbVariant = "";
+  };
 
-# Enable the X11 windowing system.
-	services.xserver.enable = true;
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
 
-# Enable the GNOME Desktop Environment.
-	services.xserver.displayManager.gdm.enable = true;
-	services.xserver.desktopManager.gnome.enable = true;
+  # Enable sound with pipewire.
+  sound.enable = true;
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
 
-# Configure keymap in X11
-	services.xserver = {
-		layout = "us";
-		xkbVariant = "";
-	};
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
+  };
 
-# Enable CUPS to print documents.
-	services.printing.enable = true;
+  # Enable touchpad support (enabled default in most desktopManager).
+  # services.xserver.libinput.enable = true;
 
-# Enable sound with pipewire.
-	sound.enable = true;
-	hardware.pulseaudio.enable = false;
-	security.rtkit.enable = true;
-	services.pipewire = {
-		enable = true;
-		alsa.enable = true;
-		alsa.support32Bit = true;
-		pulse.enable = true;
-# If you want to use JACK applications, uncomment this
-#jack.enable = true;
+  # Containers
+  virtualisation.docker.enable = true;
 
-# use the example session manager (no others are packaged yet so this is enabled by default,
-# no need to redefine it in your config for now)
-#media-session.enable = true;
-	};
+  programs.fish.enable = true;
 
-# Enable touchpad support (enabled default in most desktopManager).
-# services.xserver.libinput.enable = true;
+  users.defaultUserShell = pkgs.fish;
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.dt = {
+    isNormalUser = true;
+    description = "dt";
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    packages = with pkgs; [
+      firefox
+      brave
+      neovim
+      git
+      pipx
 
-# Containers
-	virtualisation.docker.enable=true;
+      emacs
+      ranger
+      tmux
+      fish
+      kitty
+      wezterm
+      vscode
+      watchexec
+      #	logseq
+      #	obsidian
+      #  thunderbird
+    ];
+  };
 
-	programs.fish.enable=true;
+  # Enable automatic login for the user.
+  services.xserver.displayManager.autoLogin.enable = true;
+  services.xserver.displayManager.autoLogin.user = "dt";
 
-users.defaultUserShell = pkgs.fish;
-# Define a user account. Don't forget to set a password with ‘passwd’.
-	users.users.dt = {
-		isNormalUser = true;
-		description = "dt";
-		extraGroups = [ "networkmanager" "wheel" "docker" ];
-		packages = with pkgs; [
-			firefox
-				brave
-				neovim
-				git
-				pipx
+  # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
 
-				emacs
-				ranger
-				tmux
-				fish
-				kitty
-				wezterm
-				vscode
-				watchexec
-#	logseq
-#	obsidian
-#  thunderbird
-		];
-	};
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
-# Enable automatic login for the user.
-	services.xserver.displayManager.autoLogin.enable = true;
-	services.xserver.displayManager.autoLogin.user = "dt";
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment.systemPackages = with pkgs; [
+    nssmdns
+    wget
+    docker
+    neovim
+    ranger
+    tmux
+    fish
+    openssh
+    mpv
+  ];
 
-# Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-	systemd.services."getty@tty1".enable = false;
-	systemd.services."autovt@tty1".enable = false;
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
 
-# Allow unfree packages
-	nixpkgs.config.allowUnfree = true;
+  # List services that you want to enable:
 
-# List packages installed in system profile. To search, run:
-# $ nix search wget
-	environment.systemPackages = with pkgs; [
-		nssmdns
-			wget
-			docker
-			neovim
-			ranger
-			tmux
-			fish
-			openssh
-			mpv
-	];
+  # Enable the OpenSSH daemon.
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = true;
+  };
 
-# Some programs need SUID wrappers, can be configured further or are
-# started in user sessions.
-# programs.mtr.enable = true;
-# programs.gnupg.agent = {
-#   enable = true;
-#   enableSSHSupport = true;
-# };
+  # services.avahi.nssmdns.enable=true;
 
-# List services that you want to enable:
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
 
-# Enable the OpenSSH daemon.
-	services.openssh = {
-		enable = true;
-		passwordAuthentication = true;
-	};
-
-	# services.avahi.nssmdns.enable=true;
-
-# Open ports in the firewall.
-# networking.firewall.allowedTCPPorts = [ ... ];
-# networking.firewall.allowedUDPPorts = [ ... ];
-# Or disable the firewall altogether.
-# networking.firewall.enable = false;
-
-# This value determines the NixOS release from which the default
-# settings for stateful data, like file locations and database versions
-# on your system were taken. It‘s perfectly fine and recommended to leave
-# this value at the release version of the first install of this system.
-# Before changing this value read the documentation for this option
-# (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-	system.stateVersion = "23.11"; # Did you read the comment?
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "23.11"; # Did you read the comment?
 
 }
