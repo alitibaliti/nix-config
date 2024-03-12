@@ -5,21 +5,17 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ # Include the results of the hardware scan.
-    #<home-manager/nixos>
+  imports = [
+    # Include the results of the hardware scan.
+    # .hosts/z3/hardware-configuration.nix
     ./hardware-configuration.nix
-    # ./home-manager.nix
-    ./home.nix
   ];
 
-  nix = {
-    package = pkgs.nixFlakes;
-    extraOptions = lib.optionalString (config.nix.package == pkgs.nixFlakes)
-      "experimental-features = nix-command flakes";
-  };
+  # ......
 
+  # Enable the Flakes feature and the accompanying new nix command-line tool
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
+  
   # nix.optimise.automatic = true;
   nix.settings.auto-optimise-store = true;
 
@@ -119,6 +115,7 @@
   programs.fish.enable = true;
 
   users.defaultUserShell = pkgs.fish;
+  programs.neovim.defaultEditor = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dt = {
     isNormalUser = true;
@@ -139,9 +136,10 @@
       wezterm
       vscode
       watchexec
-      #	logseq
-      #	obsidian
-      #  thunderbird
+      logseq
+      obsidian
+      syncthing
+  #  thunderbird
     ];
   };
 
