@@ -39,7 +39,7 @@
 
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "z3"; # Define your hostname.
+  networking.hostName = "z1"; # Define your hostname.
 
   # Enable networking.
   # networking.useDHCP = true;
