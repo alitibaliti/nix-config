@@ -13,20 +13,26 @@
 
   # ......
 
+  nix.package = pkgs.nixUnstable;
   # Enable the Flakes feature and the accompanying new nix command-line tool
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  
+
   # nix.optimise.automatic = true;
   nix.settings.auto-optimise-store = true;
 
   # Bootloader.
   # boot.loader.systemd-boot.enable = true;
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "nodev";
+  # boot.loader.grub.enable = true;
+  # boot.loader.grub.device = "nodev";
   # boot.loader.grub.device = "/dev/nvme0";
+  # boot.loader.grub.devices = "/dev/nvme0";
   boot.loader.grub.useOSProber = true;
-
+  # boot.loader.grub.efiSupport = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  # boot.loader.efi.efiSysMountPoint = "/boot";
+
+  # boot.loader.grub.devices = [ "nodev" ];
+  # boot.loader.grub.mirroredBoots = [];
 
   networking.hostName = "z3"; # Define your hostname.
 
@@ -109,8 +115,16 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  services.syncthing.enable = true;
+
   # Containers
   virtualisation.docker.enable = true;
+
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-25.9.0"
+  ];
+
 
   programs.fish.enable = true;
 
@@ -128,6 +142,8 @@
       git
       pipx
 
+      nixpkgs-fmt
+
       emacs
       ranger
       tmux
@@ -139,7 +155,8 @@
       logseq
       obsidian
       syncthing
-  #  thunderbird
+      vscode
+      #  thunderbird
     ];
   };
 
