@@ -6,6 +6,18 @@
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
+  boot.loader = {
+  efi = {
+    canTouchEfiVariables = true;
+    efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
+  };
+  grub = {
+     efiSupport = true;
+     #efiInstallAsRemovable = true; # in case canTouchEfiVariables doesn't work for your system
+     device = "nodev";
+  };
+};
+
   boot.initrd.availableKernelModules = [
     "nvme"
     "xhci_pci"
@@ -26,6 +38,11 @@
   };
 
   fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/C085-F172";
+    fsType = "vfat";
+  };
+
+  fileSystems."/boot/efi" = {
     device = "/dev/disk/by-uuid/C085-F172";
     fsType = "vfat";
   };
