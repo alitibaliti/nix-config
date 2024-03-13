@@ -132,9 +132,13 @@
     description = "dt";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
+      kanata-with-cmd
+      
       firefox
       brave
       neovim
+      vim
+      vimPlugins.LazyVim
       git
       pipx
 
