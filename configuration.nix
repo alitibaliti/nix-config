@@ -34,8 +34,8 @@
   # Bootloader.
   # boot.loader.systemd-boot.enable = true;
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "nodev";
-  # boot.loader.grub.device = "/dev/nvme0";
+  #boot.loader.grub.device = "nodev";
+  boot.loader.grub.device = "/dev/nvme0";
   boot.loader.grub.useOSProber = true;
 
   boot.loader.efi.canTouchEfiVariables = true;
@@ -157,6 +157,8 @@
       logseq
       obsidian
       #  thunderbird
+
+      slack
     ];
   };
 
