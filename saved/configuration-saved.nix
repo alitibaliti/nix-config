@@ -7,13 +7,12 @@
 {
   imports = [ # Include the results of the hardware scan.
     #<home-manager/nixos>
-    # ./hardware-configuration.nix
     ./hosts/z1/hardware-configuration.nix
     # ./home-manager.nix
     # ./home.nix
   ];
 
-  nix = {
+  nix = {	
     package = pkgs.nixFlakes;
     extraOptions = lib.optionalString (config.nix.package == pkgs.nixFlakes)
       "experimental-features = nix-command flakes";
@@ -23,12 +22,6 @@
 
   # nix.optimise.automatic = true;
   nix.settings.auto-optimise-store = true;
-
-  nixpkgs.config.permittedInsecurePackages = [
-                "nix-2.15.3"
-                "electron-25.9.0"
-              ];
-
 
   # Bootloader.
   # boot.loader.systemd-boot.enable = true;
@@ -138,8 +131,6 @@
       git
       pipx
 
-      rnix-lsp
-
       emacs
       ranger
       tmux
@@ -148,8 +139,8 @@
       wezterm
       vscode
       watchexec
-      	logseq
-      	obsidian
+      #	logseq
+      #	obsidian
       #  thunderbird
     ];
   };
