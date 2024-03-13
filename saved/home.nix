@@ -5,11 +5,6 @@
   z3 = import <home-manager> {
     inherit (pkgs) lib;
 
-    # Home Manager needs a bit of information about you and the
-    # paths it should manage.
-    # home.username = "dt";
-    # home.homeDirectory = "/home/dt";
-
     # Packages that should be installed to the user profile.
 
     # home.packages = with pkgs; [
