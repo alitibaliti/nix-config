@@ -8,9 +8,7 @@
   imports = [
     # Include the results of the hardware scan.
     #<home-manager/nixos>
-    # ./hardware-configuration.nix
     ./hosts/z1/hardware-configuration.nix
-    # ./home-manager.nix
     # ./home.nix
   ];
 
