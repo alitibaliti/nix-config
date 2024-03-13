@@ -5,7 +5,8 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ # Include the results of the hardware scan.
+  imports = [
+    # Include the results of the hardware scan.
     #<home-manager/nixos>
     # ./hardware-configuration.nix
     ./hosts/z1/hardware-configuration.nix
@@ -25,9 +26,9 @@
   nix.settings.auto-optimise-store = true;
 
   nixpkgs.config.permittedInsecurePackages = [
-                "nix-2.15.3"
-                "electron-25.9.0"
-              ];
+    "nix-2.15.3"
+    "electron-25.9.0"
+  ];
 
 
   # Bootloader.
@@ -39,7 +40,7 @@
 
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "z1"; # Define your hostname.
+  networking.hostName = "z3"; # Define your hostname.
 
   # Enable networking.
   # networking.useDHCP = true;
@@ -133,16 +134,17 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
       kanata-with-cmd
-      
+
       firefox
       brave
       neovim
       vim
       vimPlugins.LazyVim
+      meld
       git
       pipx
 
-      rnix-lsp
+      # rnix-lsp - obsolete
 
       emacs
       ranger
@@ -152,8 +154,8 @@
       wezterm
       vscode
       watchexec
-      	logseq
-      	obsidian
+      logseq
+      obsidian
       #  thunderbird
     ];
   };
