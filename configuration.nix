@@ -153,6 +153,9 @@ programs.neovim.defaultEditor = true;
       git
       pipx
 
+      # bat
+      fd
+
       nixpkgs-fmt
       nil
       nixd

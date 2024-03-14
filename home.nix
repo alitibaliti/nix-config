@@ -150,6 +150,10 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+    "${config.xdg.configHome}" = {
+  source = ./dotfiles/tmux;
+  recursive = true;
+};
   };
 
   home.sessionVariables = {
@@ -166,14 +170,32 @@
   #   enableTreesitter=true;
   # };
 
+  programs.git = {
+    enable = true;
+	  includes = [
+      { path = "~/.gitlocalconfig"; }
+    ];
+    aliases = {
+      ap = "add -p";
+    };
+    extraConfig = {
+      pull.ff = "only";
+    };
+  };
+
+  programs.bat = {
+    enable = true;
+  };
+
   programs.tmux={
   	enable = true;
-	aggressiveResize=true;
-	baseIndex=1;
-  clock24=true;
-  newSession=true;
-  mouse=true;
-  shortcut="C-Space";
+    shell = "fish";
+	# aggressiveResize=true;
+	# baseIndex=1;
+  # clock24=true;
+  # newSession=true;
+  # mouse=true;
+  # shortcut="C-Space";
   };
   programs.zsh = {
     enable = true;
