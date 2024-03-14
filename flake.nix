@@ -1,20 +1,51 @@
+# sudo nixos-rebuild -v --impure switch --no-flake
+# home-manager switch
 {
-  description = "A simple NixOS flake";
+  description = "NixOS flake";
 
+ 
   inputs = {
-    # NixOS official package source, using the nixos-23.11 branch here
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    plugin-onedark.url = "github:navarasu/onedark.nvim";
+    plugin-onedark.flake = false;
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
-    # Please replace my-nixos with your hostname
-    nixosConfigurations.z1 = nixpkgs.lib.nixosSystem {
+#   outputs = { self, nixpkgs, ... }@inputs: {
+#     # Please replace my-nixos with your hostname
+#     nixosConfigurations.z1 = nixpkgs.lib.nixosSystem {
+#       system = "x86_64-linux";
+#       modules = [
+#         # Import the previous configuration.nix we used,
+#         # so the old configuration file still takes effect
+#         ./configuration.nix
+#       ];
+#     };
+#   };
+# }
+
+
+  outputs = { self, nixpkgs, ... }@inputs:
+    let
       system = "x86_64-linux";
-      modules = [
-        # Import the previous configuration.nix we used,
-        # so the old configuration file still takes effect
-        ./configuration.nix
-      ];
+      pkgs = import nixpkgs {
+        inherit system;
+      };
+    in {
+
+      homeConfigurations."dt" =
+        inputs.home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+
+          modules = [ ./nixos/home.nix ];
+
+          extraSpecialArgs = { inherit inputs; };
+        };
     };
-  };
 }
