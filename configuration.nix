@@ -4,11 +4,18 @@
 
 { config, pkgs, lib, ... }:
 
-{
+let 
+    nixvim = import (builtins.fetchGit {
+    url = "https://github.com/nix-community/nixvim";
+    # If you are not running an unstable channel of nixpkgs, select the corresponding branch of nixvim.
+    # ref = "nixos-23.05";
+  });
+in {
   imports = [
     # Include the results of the hardware scan.
-    #<home-manager/nixos>
+    # <home-manager/nixos>
     ./hosts/z1/hardware-configuration.nix
+    #  nixvim.homeManagerModules.nixvim
     # ./home.nix
   ];
 
@@ -25,6 +32,7 @@
 
   nixpkgs.config.permittedInsecurePackages = [
     "nix-2.15.3"
+    "nix-2.16.2"
     "electron-25.9.0"
   ];
 
@@ -119,12 +127,15 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  services.syncthing.enable = true;
+
   # Containers
   virtualisation.docker.enable = true;
 
   programs.fish.enable = true;
 
   users.defaultUserShell = pkgs.fish;
+programs.neovim.defaultEditor = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dt = {
     isNormalUser = true;
@@ -142,7 +153,9 @@
       git
       pipx
 
-      # rnix-lsp - obsolete
+      nixpkgs-fmt
+      nil
+      nixd
 
       emacs
       ranger
@@ -154,6 +167,8 @@
       watchexec
       logseq
       obsidian
+      # syncthing
+      
       #  thunderbird
 
       slack
