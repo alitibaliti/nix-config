@@ -35,6 +35,7 @@
   # boot.loader.grub.mirroredBoots = [];
 
   networking.hostName = "z3"; # Define your hostname.
+  networking.domain="local";
 
   # Enable networking.
   # networking.useDHCP = true;
