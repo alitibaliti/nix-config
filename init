@@ -1,0 +1,2 @@
+NIXPKGS_ALLOW_UNFREE=1 nix shell nixpkgs#tmux nixpkgs#tmux nixpkgs#neovim nixpkgs#fish --extra-experimental-features nix-command --extra-experimental-features flakes --command fish
+
