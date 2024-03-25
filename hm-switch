@@ -1,0 +1,2 @@
+nix flake update --extra-experimental-features nix-command --extra-experimental-features flakes
+home-manager switch --experimental-features nix-command --extra-experimental-features flakes

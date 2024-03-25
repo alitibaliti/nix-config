@@ -1,2 +1,5 @@
-NIXPKGS_ALLOW_UNFREE=1 nix shell nixpkgs#tmux nixpkgs#tmux nixpkgs#neovim nixpkgs#fish --extra-experimental-features nix-command --extra-experimental-features flakes --command fish
-
+export NIXPKGS_ALLOW_UNFREE=1
+# NIXPKGS_ALLOW_UNFREE=1 nix shell nixpkgs#vscode nixpkgs#tmux nixpkgs#tmux nixpkgs#neovim nixpkgs#fish --extra-experimental-features nix-command --extra-experimental-features flakes --command fish
+NIXPKGS_ALLOW_UNFREE=1 nix shell  nixpkgs#tmux nixpkgs#tmux nixpkgs#neovim nixpkgs#fish --extra-experimental-features nix-command --extra-experimental-features flakes --command fish
+nix-shell -p vscode tmux neovim git
+fish
